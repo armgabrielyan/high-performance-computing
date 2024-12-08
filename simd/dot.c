@@ -139,10 +139,10 @@ void run_tests() {
     printf("Running tests...\n");
 
     printf("Test 1: dot product\n");
-    // test_dot();
+    test_dot();
 
     printf("Test 2: dot product (AVX 256)\n");
-    // test_dot_avx_256();
+    test_dot_avx_256();
 
     #ifdef __AVX512F__
     printf("Test 3: dot product (AVX 512)\n");
@@ -158,7 +158,7 @@ int main() {
 #else
     printf("Benchmarking...\n");
 
-    size_t n = 1000000;
+    size_t n = 10 * 1000000;
 
     float *a = (float *)malloc(n * sizeof(float));
     float *b = (float *)malloc(n * sizeof(float));
@@ -195,6 +195,19 @@ int main() {
 
     printf("Dot product (AVX 256) result: %f\n", result);
     printf("Time taken: %f seconds\n", time_taken);
+
+#ifdef __AVX512F__
+    start = clock();
+
+    result = dot_avx_512(a, b, n);
+
+    end = clock();
+
+    time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Dot product (AVX 512) result: %f\n", result);
+    printf("Time taken: %f seconds\n", time_taken);
+#endif
 
     free(a);
     free(b);
